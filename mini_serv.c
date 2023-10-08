@@ -6,11 +6,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-fd_set fds, rr, ww;
-
-char r_buff[4200], w_buff[200000];
-
-int max = 0, next_id = 0;
 
 typedef struct client {
 
@@ -20,12 +15,18 @@ typedef struct client {
 
 } t_client;
 
+
+fd_set fds, rr, ww;
+int max = 0, next_id = 0;
+char r_buff[4200], w_buff[200000];
 t_client clients[128];
+
 
 void err(void) {
     write(2, "Fatal error\n", 12);
     exit(1);
 }
+
 
 void send_it(int c) {
     for (int i = 0; i <= max; i++) {
@@ -34,6 +35,7 @@ void send_it(int c) {
         }
     }
 }
+
 
 int main(int ac, char **av) {
 
@@ -71,13 +73,18 @@ int main(int ac, char **av) {
             continue;
         
         for (int fd = 0; fd <= max; fd++) {
+
             if (FD_ISSET(fd, &rr)) {
                 if (fd == sockfd) {
+
                     int conn = accept(fd, NULL, NULL);
+
                     if (conn < 0)
                         continue;
+
                     if (max < conn)
                         max = conn;
+
                     clients[conn].id = next_id++;
                     clients[conn].len = 0;
                     FD_SET(conn, &fds);
@@ -111,6 +118,3 @@ int main(int ac, char **av) {
         }
     }
 }
-
-
-
