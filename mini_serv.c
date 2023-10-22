@@ -103,7 +103,8 @@ int main(int ac, char **av) {
                     } else {
 
                         for (int i = 0; i < len; i++) {
-                            clients[fd].msg[clients[fd].len++] = r_buff[i];
+                            clients[fd].msg[clients[fd].len] = r_buff[i];
+                            clients[fd].len++;
                             if (r_buff[i] == '\n') {
                                 clients[fd].msg[clients[fd].len] = '\0';
                                 clients[fd].len = 0;
